@@ -20,16 +20,27 @@ class LinkedList:
         
         self._last = self._head
 
-    def find(self, item: int) -> Elem | None:
+    def find_forward(self, item: int) -> Elem | None:
         current = self._head.right
 
         while current is not self._head and current.val != item:
             current = current.right
 
         return current if current is not self._head else None
+    
+    def find_backward(self, item: int) -> Elem | None:
+        current = self._head.left
 
-    def exist(self, item: int) -> bool:
-        return self.find(item) is None
+        while current is not self._head and current.val != item:
+            current = current.left
+
+        return current if current is not self._head else None
+
+    def exist_forward(self, item: int) -> bool:
+        return self.find_forward(item) is None
+    
+    def exist_backward(self, item: int) -> bool:
+        return self.find_backward(item) is None
 
     def append(self, item: int):
         temp = self.Elem(val=item, left=self._last, right=self._head)
@@ -38,57 +49,37 @@ class LinkedList:
         self._last = temp
 
     def insert_before(self, item: int, find_item: int) -> bool:
-        prev = self._head
-        current = prev.right
-
-        while current is not None and current.val != find_item:
-            prev = current
-            current = prev.right
+        current = self.find_forward(find_item)
 
         if current is None:
             return False
 
-        temp = self.Elem(val=item)
-        prev.right = temp
-        temp.right = current
+        temp = self.Elem(val=item, left=current.left, right=current)
+        current.left.right = temp
+        current.left = temp
 
         return True
 
     def insert_after(self, item: int, find_item: int) -> bool:
-        prev = self._head
-        current = prev.right
-
-        while current is not None and current.val != find_item:
-            prev = current
-            current = prev.right
+        current = self.find_forward(find_item)
 
         if current is None:
             return False
 
-        temp = self.Elem(val=item)
-        temp.right = current.right
+        temp = self.Elem(val=item, left=current, right=current.right)
+        current.right.left = temp
         current.right = temp
-
-        if current.right is None:
-            self._tail = current
 
         return True
 
     def delete(self, find_item: int):
-        prev = self._head
-        current = prev.right
-
-        while current is not None and current.val != find_item:
-            prev = current
-            current = prev.right
+        current = self.find_forward(find_item)
 
         if current is None:
             return False
 
-        prev.right = current.right
-
-        if prev.right is None:
-            self._tail = prev
+        current.left.right = current.right
+        current.right.left = current.left
 
         return True
     
@@ -126,7 +117,7 @@ def run_command(l: LinkedList, command: str):
 
         case "2":
             item = int(input("Введите искомый элемент: "))
-            res = "элемент существует" if l.exist(item) else f"элемент не найден"
+            res = "элемент существует" if l.exist_forward(item) else f"элемент не найден"
 
             print(f"Результат поиска: {res}")
 
