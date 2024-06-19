@@ -69,7 +69,7 @@ class LinkedList:
 
         return True
 
-    def delete(self, find_item: int):
+    def remove(self, find_item: int):
         current = self.find_forward(find_item)
 
         if current is None:
@@ -157,7 +157,7 @@ def run_command(l: LinkedList, command: str):
 
         case "5":
             find_elem = int(input("Введите искомый элемент: "))
-            res = l.delete(find_elem)
+            res = l.remove(find_elem)
 
             print("Элемент удален" if res else "Не удалось удалить элемент")
 
