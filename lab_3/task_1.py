@@ -6,19 +6,20 @@ from dataclasses import dataclass, field
 class LinkedList:
     @dataclass
     class Elem:
-        val: int
+        val: int | None
         left: Self | None = field(default=None)
         right: Self | None = field(default=None)
 
     _head: Elem
-    _last: Elem
+    _count: int = 0
 
     def __init__(self):
-        self._head = self.Elem(val=0)
+        self._head = self.Elem(val=None)
         self._head.left = self._head
         self._head.right = self._head
-        
-        self._last = self._head
+
+    def empty(self) -> bool:
+        return self._count == 0
 
     def find_forward(self, item: int) -> Elem | None:
         current = self._head.right
@@ -27,7 +28,7 @@ class LinkedList:
             current = current.right
 
         return current if current is not self._head else None
-    
+
     def find_backward(self, item: int) -> Elem | None:
         current = self._head.left
 
@@ -37,16 +38,10 @@ class LinkedList:
         return current if current is not self._head else None
 
     def exist_forward(self, item: int) -> bool:
-        return self.find_forward(item) is None
-    
-    def exist_backward(self, item: int) -> bool:
-        return self.find_backward(item) is None
+        return self.find_forward(item) is not None
 
-    def append(self, item: int):
-        temp = self.Elem(val=item, left=self._last, right=self._head)
-        self._last.right = temp
-        self._head.left = temp
-        self._last = temp
+    def exist_backward(self, item: int) -> bool:
+        return self.find_backward(item) is not None
 
     def insert_before(self, item: int, find_item: int) -> bool:
         current = self.find_forward(find_item)
@@ -57,11 +52,12 @@ class LinkedList:
         temp = self.Elem(val=item, left=current.left, right=current)
         current.left.right = temp
         current.left = temp
+        self._count += 1
 
         return True
 
     def insert_after(self, item: int, find_item: int) -> bool:
-        current = self.find_forward(find_item)
+        current = self._head if self.empty() else self.find_forward(find_item)
 
         if current is None:
             return False
@@ -69,6 +65,7 @@ class LinkedList:
         temp = self.Elem(val=item, left=current, right=current.right)
         current.right.left = temp
         current.right = temp
+        self._count += 1
 
         return True
 
@@ -80,16 +77,17 @@ class LinkedList:
 
         current.left.right = current.right
         current.right.left = current.left
+        self._count -= 1
 
         return True
-    
+
     def iter_forward(self):
         current = self._head.right
 
         while current is not self._head:
             yield current.val
             current = current.right
-    
+
     def iter_backward(self):
         current = self._head.left
 
@@ -116,31 +114,50 @@ def run_command(l: LinkedList, command: str):
                     print("Неверно выбрано действие")
 
         case "2":
-            item = int(input("Введите искомый элемент: "))
-            res = "элемент существует" if l.exist_forward(item) else f"элемент не найден"
+            print("1. Прямое направление")
+            print("2. Обратное направление")
 
-            print(f"Результат поиска: {res}")
+            direction = input("Выберите направление: ")
+            item = int(input("Введите искомый элемент: "))
+
+            match direction:
+                case "1":
+                    print(l.find_forward(item).val)
+
+                    res = (
+                        "элемент существует"
+                        if l.exist_forward(item)
+                        else f"элемент не найден"
+                    )
+                    res = f"Результат поиска: {res}"
+                case "2":
+                    res = (
+                        "элемент существует"
+                        if l.exist_backward(item)
+                        else f"элемент не найден"
+                    )
+                    res = f"Результат поиска: {res}"
+                case _:
+                    res = "Неверно выбрано действие"
+
+            print(res)
 
         case "3":
-            item = int(input("Введите элемент: "))
-            l.append(item)
-            print("Элемент добавлен")
-
-        case "4":
             item = int(input("Введите элемент: "))
             find_elem = int(input("Введите искомый элемент: "))
             res = l.insert_before(item, find_elem)
 
             print("Элемент добавлен" if res else "Не удалось вставить элемент")
 
-        case "5":
+        case "4":
             item = int(input("Введите элемент: "))
-            find_elem = int(input("Введите искомый элемент: "))
+            find_elem = None if l.empty() else int(input("Введите искомый элемент: "))
+
             res = l.insert_after(item, find_elem)
 
             print("Элемент добавлен" if res else "Не удалось вставить элемент")
 
-        case "6":
+        case "5":
             find_elem = int(input("Введите искомый элемент: "))
             res = l.delete(find_elem)
 
@@ -156,10 +173,9 @@ if __name__ == "__main__":
     while True:
         print("1. Вывод текущего состояния")
         print("2. Поиск")
-        print("3. Добавить")
-        print("4. Вставка перед")
-        print("5. Вставка после")
-        print("6. Удаление")
+        print("3. Добавить перед")
+        print("4. Добавить после")
+        print("5. Удаление")
 
         command = input("Выберите: ")
         os.system("cls")
