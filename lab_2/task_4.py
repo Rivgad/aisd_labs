@@ -47,6 +47,10 @@ class LinkedList:
         return True
 
     def insert_after(self, item: int, find_item: int) -> bool:
+        if self._head.next is None:
+            self.append(item)
+            return True
+
         prev = self._head
         current = prev.next
 
