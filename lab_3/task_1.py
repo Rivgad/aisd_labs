@@ -122,8 +122,6 @@ def run_command(l: LinkedList, command: str):
 
             match direction:
                 case "1":
-                    print(l.find_forward(item).val)
-
                     res = (
                         "элемент существует"
                         if l.exist_forward(item)
