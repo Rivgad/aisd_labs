@@ -166,7 +166,7 @@ def run_command(l: LinkedList, command: str):
 
 
 if __name__ == "__main__":
-    stack = LinkedList()
+    l = LinkedList()
 
     while True:
         print("1. Вывод текущего состояния")
@@ -178,6 +178,6 @@ if __name__ == "__main__":
         command = input("Выберите: ")
         os.system("cls")
 
-        run_command(stack, command)
+        run_command(l, command)
 
         print()
