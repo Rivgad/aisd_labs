@@ -16,7 +16,7 @@ def benchmark_function(array: list, function):
 
 
 if __name__ == "__main__":
-    array_sizes = [10, 100, 1000]
+    array_sizes = [10, 100, 1000, 10000]
     methods_list = [
         "Cортировка обменом",
         "Сортировка выбором",
