@@ -20,7 +20,7 @@ if __name__ == "__main__":
         "Быстрая сортировка",
         "Пирамидальная сортировка",
     ]
-    data = [[0 for _ in range(len(array_sizes))] for _ in range(len( methods_list))]
+    data = [[0 for _ in range(len(array_sizes))] for _ in range(len(methods_list))]
 
     print(f"Benchmark start...")
     for index in range(len(array_sizes)):

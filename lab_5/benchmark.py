@@ -22,19 +22,20 @@ if __name__ == "__main__":
         "Сортировка выбором",
         "Сортировка вставками",
     ]
-    data = [[0 for _ in range(len(methods_list))] for _ in range(len(array_sizes))]
+    data = [[0 for _ in range(len(array_sizes))] for _ in range(len(methods_list))]
 
     print(f"Benchmark start...")
     for index in range(len(array_sizes)):
         array_size = array_sizes[index]
         array = generate_random_array(array_size)
 
-        data[index][0] = benchmark_function(array, bubble_sort)
-        data[index][1] = benchmark_function(array, selection_sort)
-        data[index][2] = benchmark_function(array, insertion_sort)
+        data[0][index] = benchmark_function(array, bubble_sort)
+        data[1][index] = benchmark_function(array, selection_sort)
+        data[2][index] = benchmark_function(array, insertion_sort)
 
-    row_format = "{:>15}" + "{:>25}" * (len(methods_list))
-    print(row_format.format("Размер массива", *methods_list))
+    head_format = "{:>25}" + "{:>10}" * (len(array_sizes))
+    print(head_format.format("Размер массива", *array_sizes))
 
-    for item, row in zip(array_sizes, data):
+    row_format = "{:>25}" + "{:>10.4f}" * (len(array_sizes))
+    for item, row in zip(methods_list, data):
         print(row_format.format(item, *row))
