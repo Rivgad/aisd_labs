@@ -173,7 +173,11 @@ def run_command(l: ListsList, command: str):
         case "2":
             item = int(input("Введите искомый элемент: "))
             res = l.find(item)
-            res = f"элемент существует в списке {res[0]}, индекс {res[1]}" if res[0] != -1 else f"элемент не найден"
+            res = (
+                f"элемент существует в списке {res[0]}, индекс {res[1]}"
+                if res[0] != -1
+                else f"элемент не найден"
+            )
 
             print(f"Результат поиска: {res}")
 
