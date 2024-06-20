@@ -36,5 +36,5 @@ if __name__ == "__main__":
     row_format = "{:>15}" + "{:>25}" * (len(methods_list))
     print(row_format.format("Размер массива", *methods_list))
 
-    for team, row in zip(array_sizes, data):
-        print(row_format.format(team, *row))
+    for item, row in zip(array_sizes, data):
+        print(row_format.format(item, *row))
