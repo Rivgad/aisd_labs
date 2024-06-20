@@ -2,10 +2,12 @@ import os
 from dataclasses import dataclass, field
 from typing import Self
 
+
 @dataclass
 class Element:
     val: int | None = field(default=None)
     next: Self | None = field(default=None)
+
 
 class SubList:
     _head: Element
@@ -17,6 +19,9 @@ class SubList:
         self._head = Element()
         self._tail = self._head
 
+    def first(self) -> Element | None:
+        return self._head.next
+
     def empty(self) -> bool:
         return self._count == 0
 
@@ -26,13 +31,19 @@ class SubList:
         self._count += 1
 
     def remove(self):
+        if self.empty():
+            return False
+
         current = self._head
 
         while current.next is not self._tail:
             current = current.next
 
         current.next = None
+        self._tail = current
         self._count -= 1
+
+        return True
 
     def __iter__(self):
         current = self._head.next
@@ -58,6 +69,38 @@ class ListsList:
         self._tail = self._tail.next
         self._count += 1
 
+    def find(self, item: int) -> tuple[int, int]:
+        main = self._head.next
+        i = 0
+        while main is not None:
+            sub = main.first()
+            j = 0
+            while sub is not None:
+                if sub.val == item:
+                    return (i, j)
+
+                sub = sub.next
+                j += 1
+
+            main = main.next
+            i += 1
+
+        return (-1, -1)
+
+    def exist(self, item: int) -> bool:
+        main = self._head.next
+
+        while main is not None:
+            sub = main.first()
+            while sub is not None:
+                if sub.val == item:
+                    return True
+
+                sub = sub.next
+            main = main.next
+
+        return False
+
     def sub_append(self, val: int, index: int = -1):
         if self.empty():
             self.append()
@@ -73,73 +116,106 @@ class ListsList:
 
         current.append(val)
         return True
-    
+
     def remove(self):
+        if self.empty():
+            return False
+
         current = self._head
 
         while current.next is not self._tail:
             current = current.next
 
         current.next = None
+        self._tail = current
         self._count -= 1
+
+        return True
 
     def sub_remove(self, index: int = -1):
         if self.empty():
             return False
-        
-        
 
+        if index == -1:
+            current = self._tail
+        else:
+            current = self._head
+            for _ in range(index + 1):
+                current = current.next
+
+                if current is None:
+                    return False
+
+        return current.remove()
+
+    def __iter__(self):
+        current = self._head.next
+
+        while current is not None:
+            yield current
+            current = current.next
+
+    def __str__(self) -> str:
+        arr = []
+
+        for sub in self:
+            s = f"  {[x.val for x in sub]}"
+            arr.append(s)
+
+        return "[\n" + ",\n".join(arr) + "\n]"
 
 
 def run_command(l: ListsList, command: str):
     match command:
         case "1":
-            print(f"Текущее состояние: {list(l)}")
+            print(f"Текущее состояние:\n{l}")
 
         case "2":
             item = int(input("Введите искомый элемент: "))
-
-            res = (
-                "элемент существует"
-                if l.exist(item)
-                else f"элемент не найден"
-            )
+            res = l.find(item)
+            res = f"элемент существует в списке {res[0]}, индекс {res[1]}" if res[0] != -1 else f"элемент не найден"
 
             print(f"Результат поиска: {res}")
 
         case "3":
             l.append()
-
             print("Список добавлен")
 
         case "4":
-            find_elem = None if l.empty() else int(input("Введите номер списка: "))
+            index = None if l.empty() else int(input("Введите номер списка: "))
             item = int(input("Введите элемент: "))
 
-            res = l.append(item, find_elem)
+            res = l.sub_append(item, index)
 
             print("Элемент добавлен" if res else "Не удалось вставить элемент")
 
         case "5":
-            find_elem = int(input("Введите номер списка: "))
-            res = l.remove(find_elem)
+            res = l.remove()
 
             print("Список удален" if res else "Не удалось удалить список")
 
         case "6":
-            find_elem = None if l.empty() else int(input("Введите номер списка: "))
-            item = int(input("Введите элемент: "))
+            index = int(input("Введите номер списка: "))
+            res = l.sub_remove(index)
 
-            res = l.remove(item, find_elem)
-
-            print("Элемент добавлен" if res else "Не удалось вставить элемент")
+            print("Элемент удален" if res else "Не удалось удалить элемент")
 
         case _:
             print("Неверно выбрано действие")
 
 
 if __name__ == "__main__":
-    # stack = ListsList()
+    l = ListsList()
+    l.append()
+    l.sub_append(1)
+    l.sub_append(2)
+    l.append()
+    l.sub_append(3)
+    l.sub_append(4)
+    l.append()
+    l.append()
+    l.sub_append(6)
+    l.sub_append(7)
 
     while True:
         print("1. Проход по структуре")
@@ -152,6 +228,6 @@ if __name__ == "__main__":
         command = input("Выберите: ")
         os.system("cls")
 
-        # run_command(stack, command)
+        run_command(l, command)
 
         print()
