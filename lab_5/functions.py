@@ -1,6 +1,10 @@
 import random
 
 
+def generate_random_array(size):
+    return [random.randint(-10000, 10000) for _ in range(size)]
+
+
 def bubble_sort(arr):
     n = len(arr)
 
@@ -35,7 +39,3 @@ def insertion_sort(arr):
             j -= 1
         arr[j + 1] = key
     return arr
-
-
-def generate_random_array(size):
-    return [random.randint(-10000, 10000) for _ in range(size)]
