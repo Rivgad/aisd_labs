@@ -3,18 +3,19 @@ from typing import Self
 from dataclasses import dataclass, field
 
 
-class LinkedList:
-    @dataclass
-    class Elem:
-        val: int | None
-        left: Self | None = field(default=None)
-        right: Self | None = field(default=None)
+@dataclass
+class Elem:
+    val: int | None
+    left: Self | None = field(default=None)
+    right: Self | None = field(default=None)
 
+
+class LinkedList:
     _head: Elem
     _count: int = 0
 
     def __init__(self):
-        self._head = self.Elem(val=None)
+        self._head = Elem(val=None)
         self._head.left = self._head
         self._head.right = self._head
 
@@ -49,7 +50,7 @@ class LinkedList:
         if current is None:
             return False
 
-        temp = self.Elem(val=item, left=current.left, right=current)
+        temp = Elem(val=item, left=current.left, right=current)
         current.left.right = temp
         current.left = temp
         self._count += 1
@@ -62,7 +63,7 @@ class LinkedList:
         if current is None:
             return False
 
-        temp = self.Elem(val=item, left=current, right=current.right)
+        temp = Elem(val=item, left=current, right=current.right)
         current.right.left = temp
         current.right = temp
         self._count += 1

@@ -3,17 +3,18 @@ from typing import Self
 from dataclasses import dataclass, field
 
 
-class LinkedList:
-    @dataclass
-    class Elem:
-        val: int
-        next: Self | None = field(default=None)
+@dataclass
+class Elem:
+    val: int
+    next: Self | None = field(default=None)
 
+
+class LinkedList:
     _head: Elem
     _tail: Elem
 
     def __init__(self):
-        self._head = self.Elem(val=0)
+        self._head = Elem(val=0)
         self._tail = self._head
 
     def exist(self, item: int) -> bool:
@@ -25,7 +26,7 @@ class LinkedList:
         return current is None
 
     def append(self, item: int):
-        temp = self.Elem(val=item)
+        temp = Elem(val=item)
         self._tail.next = temp
         self._tail = temp
 
@@ -40,7 +41,7 @@ class LinkedList:
         if current is None:
             return False
 
-        temp = self.Elem(val=item)
+        temp = Elem(val=item)
         prev.next = temp
         temp.next = current
 
@@ -61,7 +62,7 @@ class LinkedList:
         if current is None:
             return False
 
-        temp = self.Elem(val=item)
+        temp = Elem(val=item)
         temp.next = current.next
         current.next = temp
 
