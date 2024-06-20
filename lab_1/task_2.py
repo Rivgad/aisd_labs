@@ -2,19 +2,20 @@ import os
 from typing import Self
 from dataclasses import dataclass, field
 
-class Stack:
-    @dataclass
-    class Elem:
-        val: int
-        next: Self | None = field(default=None)
+@dataclass
+class Elem:
+    val: int
+    next: Self | None = field(default=None)
 
+
+class Stack:
     _sp: Elem | None = None
 
     def is_empty(self):
         return self._sp is None
 
     def push(self, num: int):
-        self._sp = self.Elem(val=num, next=self._sp)
+        self._sp = Elem(val=num, next=self._sp)
     
     def pop(self) -> int | None:
         if self._sp is None:

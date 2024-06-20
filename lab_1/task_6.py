@@ -2,18 +2,20 @@ import os
 from typing import Self
 from dataclasses import dataclass, field
 
+
+@dataclass
+class Elem:
+    val: int
+    next: Self | None = field(default=None)
+
+
 class Queue:
-    @dataclass
-    class Elem:
-        val: int
-        next: Self | None = field(default=None)
-    
     _count: int = 0
     _first: Elem
     _last: Elem
     
     def __init__(self):
-        elem = self.Elem(val=0)
+        elem = Elem(val=0)
         self._first = elem
         self._last = self._first
 
@@ -21,7 +23,7 @@ class Queue:
         return self._first.next is None
 
     def put(self, num: int):
-        temp = self.Elem(val=num)
+        temp = Elem(val=num)
         self._last.next = temp
         self._last = temp
 
