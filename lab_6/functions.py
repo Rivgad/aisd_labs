@@ -67,9 +67,10 @@ def shell_sort(array):
     return array
 
 
-def quick_sort(array):
-    if len(array)> 1:
-        pivot=array.pop()
+def quick_sort(array: list):
+    n = len(array)
+    if n > 1:
+        pivot=array[n//2]
         grtr_lst, equal_lst, smlr_lst = [], [pivot], []
         for item in array:
             if item == pivot:
